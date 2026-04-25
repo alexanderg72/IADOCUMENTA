@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CustomsDocumentValidator.API/CustomsDocumentValidator.API.csproj" />
+  <Project Path="CustomsDocumentValidator.Application/CustomsDocumentValidator.Application.csproj" />
+  <Project Path="CustomsDocumentValidator.Domain/CustomsDocumentValidator.Domain.csproj" />
+  <Project Path="CustomsDocumentValidator.Infrastructure/CustomsDocumentValidator.Infrastructure.csproj" />
+</Solution>

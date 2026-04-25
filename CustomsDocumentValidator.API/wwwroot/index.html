@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Validador Aduanero</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f3f4f6;
+            margin: 0;
+        }
+
+        .header {
+            background: #1e3a8a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+            button:hover {
+                background: #1d4ed8;
+            }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .ok {
+            color: green;
+            font-weight: bold;
+        }
+
+        .bad {
+            color: red;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header">
+        Sistema de Validación Aduanera
+        <br />
+        <img src="img/ASIMEX LOGO.png" width="350" height="250" alt="" />
+    </div>
+
+    <div class="container">
+
+        <div class="box">
+
+            <h3>Subir documentos</h3>
+
+            <input type="file" id="duca"><br><br>
+            <input type="file" id="factura"><br><br>
+
+            <button onclick="enviar()">Validar</button>
+
+            <div class="loading" id="loading">Procesando OCR...</div>
+
+        </div>
+
+        <div class="grid">
+
+            <div class="card">
+                <div class="title">DUCA</div>
+
+                <div>Factura: <span id="d_factura"></span></div>
+                <div>Proveedor: <span id="d_proveedor"></span></div>
+                <div>NIT: <span id="d_nit"></span></div>
+                <div>Valor: <span id="d_valor"></span></div>
+                <div>Peso: <span id="d_peso"></span></div>
+                <div>Bultos: <span id="d_bultos"></span></div>
+
+            </div>
+
+            <div class="card">
+                <div class="title">FACTURA</div>
+
+                <div>Factura: <span id="f_factura"></span></div>
+                <div>Proveedor: <span id="f_proveedor"></span></div>
+                <div>Carrier: <span id="f_carrier"></span></div>
+                <div>Total: <span id="f_total"></span></div>
+                <div>Peso: <span id="f_peso"></span></div>
+                <div>Bultos: <span id="f_bultos"></span></div>
+
+            </div>
+
+        </div>
+
+        <div class="box" style="margin-top:20px;">
+            <h3>Comparación</h3>
+
+            <div>Total: <span id="cmp_total"></span></div>
+            <div>Peso: <span id="cmp_peso"></span></div>
+            <div>Bultos: <span id="cmp_bultos"></span></div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        async function enviar() {
+
+            let duca = document.getElementById("duca").files[0];
+            let factura = document.getElementById("factura").files[0];
+
+            if (!duca || !factura) {
+                alert("Sube ambos archivos");
+                return;
+            }
+
+            document.getElementById("loading").style.display = "block";
+
+            let form = new FormData();
+            form.append("duca", duca);
+            form.append("factura", factura);
+
+            let res = await fetch("/api/document/validate", {
+                method: "POST",
+                body: form
+            });
+
+            let data = await res.json();
+
+            console.log(data); // 🔥 IMPORTANTE PARA DEBUG
+
+            document.getElementById("loading").style.display = "none";
+
+            // 🔥 IMPORTANTE: nombres correctos
+            let d = data.duca;
+            let f = data.factura;
+
+            // ===== DUCA =====
+            set("d_factura", d.numeroFactura);
+            set("d_proveedor", d.proveedor);
+            set("d_nit", d.nit);
+            set("d_valor", format(d.valorTransaccion));
+            set("d_peso", format(d.pesoBrutoTotal));
+            set("d_bultos", d.bultos);
+
+            // ===== FACTURA =====
+            set("f_factura", f.numeroFactura);
+            set("f_proveedor", f.proveedor);
+            set("f_carrier", f.carrier);
+            set("f_total", format(f.total));
+            set("f_peso", format(f.pesoKg));
+            set("f_bultos", f.bultos);
+
+            // ===== COMPARACIÓN =====
+            comparar("cmp_total", d.valorTransaccion, f.total);
+            comparar("cmp_peso", d.pesoBrutoTotal, f.pesoKg);
+            comparar("cmp_bultos", d.bultos, f.bultos);
+        }
+
+        // ===== HELPERS =====
+
+        function set(id, value) {
+            document.getElementById(id).innerText = value ?? "-";
+        }
+
+        function format(value) {
+            if (!value) return "0";
+            return parseFloat(value).toLocaleString();
+        }
+
+        function comparar(id, a, b) {
+            let el = document.getElementById(id);
+
+            if (Math.abs(a - b) < 0.01) {
+                el.innerHTML = "<span class='ok'>✔ Coincide</span>";
+            } else {
+                el.innerHTML = "<span class='bad'>✘ Diferente</span>";
+            }
+        }
+
+    </script>
+
+</body>
+</html>
