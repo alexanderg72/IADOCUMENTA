@@ -39,7 +39,7 @@ namespace CustomsDocumentValidator.Infrastructure.OCR
         {
             var result = (await _ducaClient.AnalyzeDocumentAsync(
                 WaitUntil.Completed,
-                "MODELODUCAS3",
+                "CONINTERCOM",
                 pdfStream)).Value;
 
             var doc = result.Documents.FirstOrDefault();
@@ -56,7 +56,8 @@ namespace CustomsDocumentValidator.Infrastructure.OCR
                 PesoBrutoTotal = GetDecimal(doc, "PesoBrutoTotal"),
                 ValorAduana = GetDecimal(doc, "ValorAduana"),
                 LiquidacionGeneral = GetDecimal(doc, "LiquidacionGeneral"),
-                Bultos = (int)GetDecimal(doc, "Bultos")
+                Bultos = (int)GetDecimal(doc, "Bultos"),
+                Intercom = Get(doc, "Intercom")
             };
         }
 
@@ -65,7 +66,7 @@ namespace CustomsDocumentValidator.Infrastructure.OCR
         {
             var result = (await _facturaClient.AnalyzeDocumentAsync(
                 WaitUntil.Completed,
-                "MODELOFACTURAS4",
+                "factura6",
                 pdfStream)).Value;
 
             var doc = result.Documents.FirstOrDefault();
@@ -80,7 +81,9 @@ namespace CustomsDocumentValidator.Infrastructure.OCR
                 Carrier = Get(doc, "Carrier"),
                 Total = GetDecimal(doc, "Total"),
                 PesoKg = GetDecimal(doc, "PesoKg"),
-                Bultos = (int)GetDecimal(doc, "Bultos")
+                Bultos = (int)GetDecimal(doc, "Bultos"),
+                Totalsinseg = GetDecimal(doc, "Totalsinseg"), 
+                Intercom = Get(doc, "Intercom"),
             };
         }
 

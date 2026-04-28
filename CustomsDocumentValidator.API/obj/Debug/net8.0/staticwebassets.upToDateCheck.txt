@@ -1,0 +1,2 @@
+wwwroot\img\ASIMEX LOGO.png
+wwwroot\index.html

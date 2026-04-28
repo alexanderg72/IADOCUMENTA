@@ -1,0 +1,15 @@
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\bin\Debug\net8.0\CustomsDocumentValidator.Application.deps.json
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\bin\Debug\net8.0\CustomsDocumentValidator.Application.dll
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\bin\Debug\net8.0\CustomsDocumentValidator.Application.pdb
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\bin\Debug\net8.0\CustomsDocumentValidator.Domain.dll
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\bin\Debug\net8.0\CustomsDocumentValidator.Domain.pdb
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\CustomsDocumentValidator.Application.csproj.AssemblyReference.cache
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\CustomsDocumentValidator.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\CustomsDocumentValidator.Application.AssemblyInfoInputs.cache
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\CustomsDocumentValidator.Application.AssemblyInfo.cs
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\CustomsDocumentValidator.Application.csproj.CoreCompileInputs.cache
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\CustomsD.1BAE237D.Up2Date
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\CustomsDocumentValidator.Application.dll
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\refint\CustomsDocumentValidator.Application.dll
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\CustomsDocumentValidator.Application.pdb
+C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Application\obj\Debug\net8.0\ref\CustomsDocumentValidator.Application.dll

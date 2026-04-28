@@ -2,227 +2,414 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Validador Aduanero</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASIMEX - DUCA Check PRO</title>
 
     <style>
+        :root {
+            --primary: #FF0000;
+            --secondary: #2563eb;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
         body {
-            font-family: Arial;
-            background: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
+            padding-bottom: 50px;
         }
 
-        .header {
-            background: #1e3a8a;
+        /* --- NOTIFICACIONES TOAST --- */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            min-width: 280px;
+            background: #1f2937;
             color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 22px;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out forwards;
         }
 
+            .toast.info {
+                border-left: 6px solid var(--secondary);
+            }
+
+            .toast.success {
+                border-left: 6px solid var(--success);
+            }
+
+            .toast.error {
+                border-left: 6px solid var(--error);
+            }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #b90000 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+            .header img {
+                background: white;
+                padding: 8px;
+                border-radius: 4px;
+                margin-top: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+        /* --- CONTENEDOR Y BOXES --- */
         .container {
-            max-width: 1000px;
-            margin: auto;
-            margin-top: 30px;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
         }
 
         .box {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
         }
 
-        button {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
+        h3 {
+            margin-top: 0;
+            color: #374151;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
         }
 
-            button:hover {
-                background: #1d4ed8;
-            }
-
-        .grid {
+        .file-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-top: 20px;
+            margin: 20px 0;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+            button:hover:not(:disabled) {
+                background: #1d4ed8;
+                transform: translateY(-1px);
+            }
+
+            button:disabled {
+                background: #94a3b8;
+                cursor: not-allowed;
+            }
+
+        /* --- RESULTADOS --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .card {
             background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-top: 5px solid #cbd5e1;
         }
 
-        .title {
+            .card.duca {
+                border-top-color: var(--secondary);
+            }
+
+            .card.factura {
+                border-top-color: var(--primary);
+            }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .label {
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        .val {
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
             font-weight: bold;
-            margin-bottom: 10px;
         }
 
         .ok {
-            color: green;
-            font-weight: bold;
+            background: #dcfce7;
+            color: var(--success);
         }
 
         .bad {
-            color: red;
-            font-weight: bold;
+            background: #fee2e2;
+            color: var(--error);
         }
 
-        .loading {
+        .loading-text {
             text-align: center;
-            margin-top: 15px;
             display: none;
+            color: var(--secondary);
+            font-weight: bold;
+            margin-top: 15px;
         }
     </style>
-
 </head>
-
 <body>
 
+    <div id="toast-container"></div>
+
     <div class="header">
-        Sistema de Validación Aduanera
-        <br />
-        <img src="img/ASIMEX LOGO.png" width="350" height="250" alt="" />
+        <strong>DUCA Check PROaadadad</strong> <br />
+        <img src="img/ASIMEX LOGO2.jpeg" width="180" height="65" alt="ASIMEX LOGO" />
+        <p style="font-size: 13px; margin-top: 10px; opacity: 0.9;">Departamento de Talento y Cultura / Operaciones</p>
     </div>
 
     <div class="container">
 
         <div class="box">
-
-            <h3>Subir documentos</h3>
-
-            <input type="file" id="duca"><br><br>
-            <input type="file" id="factura"><br><br>
-
-            <button onclick="enviar()">Validar</button>
-
-            <div class="loading" id="loading">Procesando OCR...</div>
-
+            <h3>Subir Documentos para Validación</h3>
+            <div class="file-grid">
+                <div>
+                    <label>Archivo DUCA:</label>
+                    <input type="file" id="duca" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <div>
+                    <label>Factura Comercial:</label>
+                    <input type="file" id="factura" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+            </div>
+            <button onclick="enviar()" id="btnValidar">Verificar y Comparar Datos</button>
+            <div id="loading" class="loading-text">⌛ Procesando OCR... Por favor espera.</div>
         </div>
 
         <div class="grid">
-
-            <div class="card">
-                <div class="title">DUCA</div>
-
-                <div>Factura: <span id="d_factura"></span></div>
-                <div>Proveedor: <span id="d_proveedor"></span></div>
-                <div>NIT: <span id="d_nit"></span></div>
-                <div>Valor: <span id="d_valor"></span></div>
-                <div>Peso: <span id="d_peso"></span></div>
-                <div>Bultos: <span id="d_bultos"></span></div>
-
-            </div>
-
-            <div class="card">
-                <div class="title">FACTURA</div>
-
-                <div>Factura: <span id="f_factura"></span></div>
-                <div>Proveedor: <span id="f_proveedor"></span></div>
-                <div>Carrier: <span id="f_carrier"></span></div>
-                <div>Total: <span id="f_total"></span></div>
-                <div>Peso: <span id="f_peso"></span></div>
-                <div>Bultos: <span id="f_bultos"></span></div>
+            <div class="card duca">
+                <h3>📄 Datos DUCA</h3>
+                <div class="data-row"><span class="label">Factura:</span> <span class="val" id="d_factura">-</span></div>
+                <div class="data-row"><span class="label">Proveedor:</span> <span class="val" id="d_proveedor">-</span></div>
+                <div class="data-row"><span class="label">NIT:</span> <span class="val" id="d_nit">-</span></div>
+                <div class="data-row"><span class="label">Intercom: </span> <span class="val" id="d_intercom">-</span></div>
+                <div class="data-row"><span class="label">Total aduana:</span> <span class="val" id="d_totaladuana">-</span></div>
+                <div class="data-row"><span class="label">Total transaccion:</span> <span class="val" id="d_totaltrans">-</span></div>
+                <div class="data-row"><span class="label">Peso Bruto:</span> <span class="val" id="d_peso">-</span></div>
+                <div class="data-row"><span class="label">Bultos:</span> <span class="val" id="d_bultos">-</span></div>
 
             </div>
 
+            <div class="card factura">
+                <h3>🧾 Datos Factura</h3>
+                <div class="data-row"><span class="label">N° Factura:</span> <span class="val" id="f_factura">-</span></div>
+                <div class="data-row"><span class="label">Proveedor:</span> <span class="val" id="f_proveedor">-</span></div>
+                <div class="data-row"><span class="label">Carrier:</span> <span class="val" id="f_carrier">-</span></div>
+                <div class="data-row"><span class="label">Itercom:</span> <span class="val" id="f_intercom">-</span></div>
+                <div class="data-row"><span class="label">Total :</span> <span class="val" id="f_total">-</span></div>
+                <div class="data-row"><span class="label">Total sin seguro:</span> <span class="val" id="f_totalsinseg">-</span></div>
+                <div class="data-row"><span class="label">Peso Kg:</span> <span class="val" id="f_peso">-</span></div>
+                <div class="data-row"><span class="label">Bultos:</span> <span class="val" id="f_bultos">-</span></div>
+            </div>
         </div>
 
-        <div class="box" style="margin-top:20px;">
-            <h3>Comparación</h3>
-
-            <div>Total: <span id="cmp_total"></span></div>
-            <div>Peso: <span id="cmp_peso"></span></div>
-            <div>Bultos: <span id="cmp_bultos"></span></div>
-
+        <div class="box" style="margin-top: 25px;">
+            <h3>Resultados de la Validación</h3>
+            <div class="data-row"><span>Intercom:</span> <span id="cmp_intercom">-</span></div>
+            <div class="data-row"><span>Conciliación de Totales Transaccion:</span> <span id="cmp_totalTransacion">-</span></div>
+            <div class="data-row"><span>Conciliación de Totales Aduana:</span> <span id="cmp_totalAduana">-</span></div>
+            <div class="data-row"><span>Conciliación de Pesos:</span> <span id="cmp_peso">-</span></div>
+            <div class="data-row"><span>Conciliación de Bultos:</span> <span id="cmp_bultos">-</span></div>
         </div>
 
     </div>
 
     <script>
+        // --- MOTOR DE NOTIFICACIONES ---
+        function notify(message, type = 'info') {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = `toast ${type}`;
 
+            const icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : '🔍');
+            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add("fade-out");
+                setTimeout(() => toast.remove(), 500);
+            }, 3500);
+        }
+
+        // --- LÓGICA PRINCIPAL ---
         async function enviar() {
+            const ducaFile = document.getElementById("duca").files[0];
+            const facturaFile = document.getElementById("factura").files[0];
+            const btn = document.getElementById("btnValidar");
+            const loading = document.getElementById("loading");
 
-            let duca = document.getElementById("duca").files[0];
-            let factura = document.getElementById("factura").files[0];
-
-            if (!duca || !factura) {
-                alert("Sube ambos archivos");
+            if (!ducaFile || !facturaFile) {
+                notify("Sube ambos archivos para continuar", "error");
                 return;
             }
 
-            document.getElementById("loading").style.display = "block";
+            // UI State
+            notify("Verificando datos... analizando OCR", "info");
+            btn.disabled = true;
+            loading.style.display = "block";
 
             let form = new FormData();
-            form.append("duca", duca);
-            form.append("factura", factura);
+            form.append("duca", ducaFile);
+            form.append("factura", facturaFile);
 
-            let res = await fetch("/api/document/validate", {
-                method: "POST",
-                body: form
-            });
+            try {
+                // Llamada a tu API de .NET
+                const response = await fetch("/api/document/validate", {
+                    method: "POST",
+                    body: form
+                });
 
-            let data = await res.json();
+                if (!response.ok) throw new Error("Error en el servidor");
 
-            console.log(data); // 🔥 IMPORTANTE PARA DEBUG
+                const data = await response.json();
 
-            document.getElementById("loading").style.display = "none";
+                actualizarInterfaz(data);
+                notify("Validación finalizada con éxito", "success");
 
-            // 🔥 IMPORTANTE: nombres correctos
-            let d = data.duca;
-            let f = data.factura;
-
-            // ===== DUCA =====
-            set("d_factura", d.numeroFactura);
-            set("d_proveedor", d.proveedor);
-            set("d_nit", d.nit);
-            set("d_valor", format(d.valorTransaccion));
-            set("d_peso", format(d.pesoBrutoTotal));
-            set("d_bultos", d.bultos);
-
-            // ===== FACTURA =====
-            set("f_factura", f.numeroFactura);
-            set("f_proveedor", f.proveedor);
-            set("f_carrier", f.carrier);
-            set("f_total", format(f.total));
-            set("f_peso", format(f.pesoKg));
-            set("f_bultos", f.bultos);
-
-            // ===== COMPARACIÓN =====
-            comparar("cmp_total", d.valorTransaccion, f.total);
-            comparar("cmp_peso", d.pesoBrutoTotal, f.pesoKg);
-            comparar("cmp_bultos", d.bultos, f.bultos);
-        }
-
-        // ===== HELPERS =====
-
-        function set(id, value) {
-            document.getElementById(id).innerText = value ?? "-";
-        }
-
-        function format(value) {
-            if (!value) return "0";
-            return parseFloat(value).toLocaleString();
-        }
-
-        function comparar(id, a, b) {
-            let el = document.getElementById(id);
-
-            if (Math.abs(a - b) < 0.01) {
-                el.innerHTML = "<span class='ok'>✔ Coincide</span>";
-            } else {
-                el.innerHTML = "<span class='bad'>✘ Diferente</span>";
+            } catch (error) {
+                console.error(error);
+                notify("Hubo un error al procesar los archivos", "error");
+            } finally {
+                btn.disabled = false;
+                loading.style.display = "none";
             }
         }
 
-    </script>
+        function actualizarInterfaz(data) {
+            const d = data.duca;
+            const f = data.factura;
 
+            // Llenar DUCA
+            set("d_factura", d.numeroFactura);
+            set("d_proveedor", d.proveedor);
+            set("d_nit", d.nit);
+            set("d_totaltrans", formatCurrency(d.valorTransaccion));
+            set("d_totaladuana", formatCurrency(d.valorAduana));
+            set("d_peso", d.pesoBrutoTotal + " kg");
+            set("d_bultos", d.bultos);
+            set("d_intercom",d.intercom);
+
+
+            // Llenar Factura
+            set("f_factura", f.numeroFactura);
+            set("f_proveedor", f.proveedor);
+            set("f_carrier", f.carrier);
+            set("f_total", formatCurrency(f.total));
+            set("f_peso", f.pesoKg + " kg");
+            set("f_bultos", f.bultos);
+            let valorTotalSinSeguro = f.totalsinseg || f.totalSinSeg || f.TotalSinSeg || 0;
+            set("f_intercom", f.intercom);
+            set("f_totalsinseg", formatCurrency(valorTotalSinSeguro));
+            // Comparaciones
+            comparar("cmp_totalAduana", d.valorAduana, f.total);
+            comparar("cmp_totalTransacion", d.valorTransaccion, valorTotalSinSeguro);
+            comparar("cmp_peso", d.pesoBrutoTotal, f.pesoKg);
+            comparar("cmp_bultos", d.bultos, f.bultos);
+            compararTexto("cmp_intercom", d.intercom, f.intercom);
+        }
+        function compararTexto(id, texto1, texto2) {
+            const el = document.getElementById(id);
+
+            // Convertimos a mayúsculas y quitamos espacios para evitar errores de tipeo
+            const t1 = (texto1 || "").toString().trim().toUpperCase();
+            const t2 = (texto2 || "").toString().trim().toUpperCase();
+
+            if (t1 === "" || t2 === "") {
+                el.innerHTML = `<span style="font-weight:bold; color:gray;">${t1 || t2 || "N/A"}</span>`;
+            } else if (t1 === t2) {
+                el.innerHTML = `<span class="badge ok">✔ COINCIDE (${t1})</span>`;
+            } else {
+                el.innerHTML = `<span class="badge bad">✘ DIFERENCIA: DUCA ${t1} vs FAC ${t2}</span>`;
+            }
+        }
+        function set(id, value) {
+            document.getElementById(id).innerText = value || "N/A";
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num || 0);
+        }
+
+        function comparar(id, a, b) {
+            const el = document.getElementById(id);
+            const diff = Math.abs(parseFloat(a) - parseFloat(b));
+
+            if (diff < 0.01) {
+                el.innerHTML = '<span class="badge ok">✔ COINCIDE</span>';
+            } else {
+                el.innerHTML = `<span class="badge bad">✘ DIFERENCIA: ${diff.toFixed(2)}</span>`;
+            }
+        }
+    </script>
 </body>
 </html>

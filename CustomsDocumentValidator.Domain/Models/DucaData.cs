@@ -11,6 +11,7 @@ public class DucaData
     public string NumeroFactura { get; set; }
     public string Proveedor { get; set; }
     public string Nit { get; set; }
+    public string Intercom { get; set; }
 
     public decimal ValorTransaccion { get; set; }
     public decimal PesoBrutoTotal { get; set; }

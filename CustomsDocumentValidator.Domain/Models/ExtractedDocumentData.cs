@@ -17,6 +17,7 @@ public class ExtractedDocumentData
     public decimal ValorAduana { get; set; }
     public decimal LiquidacionGeneral { get; set; }
     public int Bultos { get; set; }
+    public decimal Totalsinseg { get; set; }
 
     public decimal Total { get; set; }
     public decimal PesoKg { get; set; }
