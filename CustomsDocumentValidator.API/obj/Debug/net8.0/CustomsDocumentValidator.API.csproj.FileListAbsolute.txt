@@ -115,7 +115,6 @@ C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.API\obj\Debug
 C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.API\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.API\obj\Debug\net8.0\swae.build.ex.cache
-C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.API\obj\Debug\net8.0\CustomsD.23417C37.Up2Date
 C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.API\obj\Debug\net8.0\CustomsDocumentValidator.API.dll
 C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.API\obj\Debug\net8.0\refint\CustomsDocumentValidator.API.dll

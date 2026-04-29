@@ -288,7 +288,7 @@
     </div>
 
     <script>
-        // 👇 --- 1. SEGURIDAD DE ACCESO (Tu código va aquí arriba) --- 👇
+        // 👇 --- 1. SEGURIDAD DE ACCESO --- 👇
         if (!localStorage.getItem("userRole")) {
             window.location.href = "login.html"; // Si no hay sesión, patada al login
         }
@@ -299,137 +299,132 @@
             window.location.href = "login.html"; // Lo manda al login
         }
 
-        // --- MOTOR DE NOTIFICACIONES (Tu código que ya tenías) ---
+        // --- MOTOR DE NOTIFICACIONES ---
         function notify(message, type = 'info') {
             const container = document.getElementById("toast-container");
             const toast = document.createElement("div");
-            
-            // --- MOTOR DE NOTIFICACIONES ---
-            function notify(message, type = 'info') {
-                const container = document.getElementById("toast-container");
-                const toast = document.createElement("div");
-                toast.className = `toast ${type}`;
+            toast.className = `toast ${type}`;
 
-                const icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : '🔍');
-                toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            const icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : '🔍');
+            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
 
-                container.appendChild(toast);
+            container.appendChild(toast);
 
-                setTimeout(() => {
-                    toast.classList.add("fade-out");
-                    setTimeout(() => toast.remove(), 500);
-                }, 3500);
+            setTimeout(() => {
+                toast.classList.add("fade-out");
+                setTimeout(() => toast.remove(), 500);
+            }, 3500);
+        }
+
+        // --- LÓGICA PRINCIPAL ---
+        async function enviar() {
+            const ducaFile = document.getElementById("duca").files[0];
+            const facturaFile = document.getElementById("factura").files[0];
+            const btn = document.getElementById("btnValidar");
+            const loading = document.getElementById("loading");
+
+            if (!ducaFile || !facturaFile) {
+                notify("Sube ambos archivos para continuar", "error");
+                return;
             }
 
-            // --- LÓGICA PRINCIPAL ---
-            async function enviar() {
-                const ducaFile = document.getElementById("duca").files[0];
-                const facturaFile = document.getElementById("factura").files[0];
-                const btn = document.getElementById("btnValidar");
-                const loading = document.getElementById("loading");
+            // UI State
+            notify("Verificando datos... analizando OCR", "info");
+            btn.disabled = true;
+            loading.style.display = "block";
 
-                if (!ducaFile || !facturaFile) {
-                    notify("Sube ambos archivos para continuar", "error");
-                    return;
-                }
+            let form = new FormData();
+            form.append("duca", ducaFile);
+            form.append("factura", facturaFile);
 
-                // UI State
-                notify("Verificando datos... analizando OCR", "info");
-                btn.disabled = true;
-                loading.style.display = "block";
+            try {
+                // Llamada a tu API de .NET
+                const response = await fetch("/api/document/validate", {
+                    method: "POST",
+                    body: form
+                });
 
-                let form = new FormData();
-                form.append("duca", ducaFile);
-                form.append("factura", facturaFile);
+                if (!response.ok) throw new Error("Error en el servidor");
 
-                try {
-                    // Llamada a tu API de .NET
-                    const response = await fetch("/api/document/validate", {
-                        method: "POST",
-                        body: form
-                    });
+                const data = await response.json();
 
-                    if (!response.ok) throw new Error("Error en el servidor");
+                actualizarInterfaz(data);
+                notify("Validación finalizada con éxito", "success");
 
-                    const data = await response.json();
-
-                    actualizarInterfaz(data);
-                    notify("Validación finalizada con éxito", "success");
-
-                } catch (error) {
-                    console.error(error);
-                    notify("Hubo un error al procesar los archivos", "error");
-                } finally {
-                    btn.disabled = false;
-                    loading.style.display = "none";
-                }
+            } catch (error) {
+                console.error(error);
+                notify("Hubo un error al procesar los archivos", "error");
+            } finally {
+                btn.disabled = false;
+                loading.style.display = "none";
             }
+        }
 
-            function actualizarInterfaz(data) {
-                const d = data.duca;
-                const f = data.factura;
+        function actualizarInterfaz(data) {
+            const d = data.duca;
+            const f = data.factura;
 
-                // Llenar DUCA
-                set("d_factura", d.numeroFactura);
-                set("d_proveedor", d.proveedor);
-                set("d_nit", d.nit);
-                set("d_totaltrans", formatCurrency(d.valorTransaccion));
-                set("d_totaladuana", formatCurrency(d.valorAduana));
-                set("d_peso", d.pesoBrutoTotal + " kg");
-                set("d_bultos", d.bultos);
-                set("d_intercom", d.intercom);
+            // Llenar DUCA
+            set("d_factura", d.numeroFactura);
+            set("d_proveedor", d.proveedor);
+            set("d_nit", d.nit);
+            set("d_totaltrans", formatCurrency(d.valorTransaccion));
+            set("d_totaladuana", formatCurrency(d.valorAduana));
+            set("d_peso", d.pesoBrutoTotal + " kg");
+            set("d_bultos", d.bultos);
+            set("d_intercom", d.intercom);
 
+            // Llenar Factura
+            set("f_factura", f.numeroFactura);
+            set("f_proveedor", f.proveedor);
+            set("f_carrier", f.carrier);
+            set("f_total", formatCurrency(f.total));
+            set("f_peso", f.pesoKg + " kg");
+            set("f_bultos", f.bultos);
+            let valorTotalSinSeguro = f.totalsinseg || f.totalSinSeg || f.TotalSinSeg || 0;
+            set("f_intercom", f.intercom);
+            set("f_totalsinseg", formatCurrency(valorTotalSinSeguro));
 
-                // Llenar Factura
-                set("f_factura", f.numeroFactura);
-                set("f_proveedor", f.proveedor);
-                set("f_carrier", f.carrier);
-                set("f_total", formatCurrency(f.total));
-                set("f_peso", f.pesoKg + " kg");
-                set("f_bultos", f.bultos);
-                let valorTotalSinSeguro = f.totalsinseg || f.totalSinSeg || f.TotalSinSeg || 0;
-                set("f_intercom", f.intercom);
-                set("f_totalsinseg", formatCurrency(valorTotalSinSeguro));
-                // Comparaciones
-                comparar("cmp_totalAduana", d.valorAduana, f.total);
-                comparar("cmp_totalTransacion", d.valorTransaccion, valorTotalSinSeguro);
-                comparar("cmp_peso", d.pesoBrutoTotal, f.pesoKg);
-                comparar("cmp_bultos", d.bultos, f.bultos);
-                compararTexto("cmp_intercom", d.intercom, f.intercom);
+            // Comparaciones
+            comparar("cmp_totalAduana", d.valorAduana, f.total);
+            comparar("cmp_totalTransacion", d.valorTransaccion, valorTotalSinSeguro);
+            comparar("cmp_peso", d.pesoBrutoTotal, f.pesoKg);
+            comparar("cmp_bultos", d.bultos, f.bultos);
+            compararTexto("cmp_intercom", d.intercom, f.intercom);
+        }
+
+        function compararTexto(id, texto1, texto2) {
+            const el = document.getElementById(id);
+
+            // Convertimos a mayúsculas y quitamos espacios para evitar errores de tipeo
+            const t1 = (texto1 || "").toString().trim().toUpperCase();
+            const t2 = (texto2 || "").toString().trim().toUpperCase();
+
+            if (t1 === "" || t2 === "") {
+                el.innerHTML = `<span style="font-weight:bold; color:gray;">${t1 || t2 || "N/A"}</span>`;
+            } else if (t1 === t2) {
+                el.innerHTML = `<span class="badge ok">✔ COINCIDE (${t1})</span>`;
+            } else {
+                el.innerHTML = `<span class="badge bad">✘ DIFERENCIA: DUCA ${t1} vs FAC ${t2}</span>`;
             }
-            function compararTexto(id, texto1, texto2) {
-                const el = document.getElementById(id);
+        }
 
-                // Convertimos a mayúsculas y quitamos espacios para evitar errores de tipeo
-                const t1 = (texto1 || "").toString().trim().toUpperCase();
-                const t2 = (texto2 || "").toString().trim().toUpperCase();
+        function set(id, value) {
+            document.getElementById(id).innerText = value || "N/A";
+        }
 
-                if (t1 === "" || t2 === "") {
-                    el.innerHTML = `<span style="font-weight:bold; color:gray;">${t1 || t2 || "N/A"}</span>`;
-                } else if (t1 === t2) {
-                    el.innerHTML = `<span class="badge ok">✔ COINCIDE (${t1})</span>`;
-                } else {
-                    el.innerHTML = `<span class="badge bad">✘ DIFERENCIA: DUCA ${t1} vs FAC ${t2}</span>`;
-                }
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num || 0);
+        }
+
+        function comparar(id, a, b) {
+            const el = document.getElementById(id);
+            const diff = Math.abs(parseFloat(a) - parseFloat(b));
+
+            if (diff < 0.01) {
+                el.innerHTML = '<span class="badge ok">✔ COINCIDE</span>';
+            } else {
+                el.innerHTML = `<span class="badge bad">✘ DIFERENCIA: ${diff.toFixed(2)}</span>`;
             }
-            function set(id, value) {
-                document.getElementById(id).innerText = value || "N/A";
-            }
-
-            function formatCurrency(num) {
-                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num || 0);
-            }
-
-            function comparar(id, a, b) {
-                const el = document.getElementById(id);
-                const diff = Math.abs(parseFloat(a) - parseFloat(b));
-
-                if (diff < 0.01) {
-                    el.innerHTML = '<span class="badge ok">✔ COINCIDE</span>';
-                } else {
-                    el.innerHTML = `<span class="badge bad">✘ DIFERENCIA: ${diff.toFixed(2)}</span>`;
-                }
-            }
+        }
     </script>
-</body>
-</html>
