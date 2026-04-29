@@ -1,2 +1,5 @@
 wwwroot\img\ASIMEX LOGO.png
+wwwroot\img\ASIMEX LOGO2.jpeg
 wwwroot\index.html
+wwwroot\indexadmin.html
+wwwroot\login.html

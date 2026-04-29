@@ -27,39 +27,32 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Soporte\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/home/codespace/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Soporte\\source\\repos\\CustomsDocumentValidator\\CustomsDocumentValidator.Application\\CustomsDocumentValidator.Application.csproj",
+      "projectUniqueName": "/workspaces/IADOCUMENTA/CustomsDocumentValidator.Application/CustomsDocumentValidator.Application.csproj",
       "projectName": "CustomsDocumentValidator.Application",
-      "projectPath": "C:\\Users\\Soporte\\source\\repos\\CustomsDocumentValidator\\CustomsDocumentValidator.Application\\CustomsDocumentValidator.Application.csproj",
-      "packagesPath": "C:\\Users\\Soporte\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Soporte\\source\\repos\\CustomsDocumentValidator\\CustomsDocumentValidator.Application\\obj\\",
+      "projectPath": "/workspaces/IADOCUMENTA/CustomsDocumentValidator.Application/CustomsDocumentValidator.Application.csproj",
+      "packagesPath": "/home/codespace/.nuget/packages/",
+      "outputPath": "/workspaces/IADOCUMENTA/CustomsDocumentValidator.Application/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Soporte\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/codespace/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Soporte\\source\\repos\\CustomsDocumentValidator\\CustomsDocumentValidator.Domain\\CustomsDocumentValidator.Domain.csproj": {
-              "projectPath": "C:\\Users\\Soporte\\source\\repos\\CustomsDocumentValidator\\CustomsDocumentValidator.Domain\\CustomsDocumentValidator.Domain.csproj"
+            "/workspaces/IADOCUMENTA/CustomsDocumentValidator.Domain/CustomsDocumentValidator.Domain.csproj": {
+              "projectPath": "/workspaces/IADOCUMENTA/CustomsDocumentValidator.Domain/CustomsDocumentValidator.Domain.csproj"
             }
           }
         }
@@ -90,12 +83,22 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.25, 8.0.25]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.25, 8.0.25]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

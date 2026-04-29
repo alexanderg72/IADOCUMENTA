@@ -9,3 +9,14 @@ C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.
 C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Domain\obj\Debug\net8.0\refint\CustomsDocumentValidator.Domain.dll
 C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Domain\obj\Debug\net8.0\CustomsDocumentValidator.Domain.pdb
 C:\Users\Soporte\source\repos\CustomsDocumentValidator\CustomsDocumentValidator.Domain\obj\Debug\net8.0\ref\CustomsDocumentValidator.Domain.dll
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\bin\Debug\net8.0\CustomsDocumentValidator.Domain.deps.json
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\bin\Debug\net8.0\CustomsDocumentValidator.Domain.dll
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\bin\Debug\net8.0\CustomsDocumentValidator.Domain.pdb
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\obj\Debug\net8.0\CustomsDocumentValidator.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\obj\Debug\net8.0\CustomsDocumentValidator.Domain.AssemblyInfoInputs.cache
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\obj\Debug\net8.0\CustomsDocumentValidator.Domain.AssemblyInfo.cs
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\obj\Debug\net8.0\CustomsDocumentValidator.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\obj\Debug\net8.0\CustomsDocumentValidator.Domain.dll
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\obj\Debug\net8.0\refint\CustomsDocumentValidator.Domain.dll
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\obj\Debug\net8.0\CustomsDocumentValidator.Domain.pdb
+C:\Users\Soporte\Desktop\IADOCUMENTA-main\CustomsDocumentValidator.Domain\obj\Debug\net8.0\ref\CustomsDocumentValidator.Domain.dll

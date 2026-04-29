@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASIMEX - Inicio de Sesión</title>
+    <style>
+        :root {
+            --primary: #FF0000;
+            --secondary: #2563eb;
+            --bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            border-top: 6px solid var(--primary);
+        }
+
+            .login-card img {
+                margin-bottom: 20px;
+                background: #f8f9fa;
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+        h2 {
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        p {
+            color: #6b7280;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+            input:focus {
+                outline: none;
+                border-color: var(--secondary);
+                ring: 2px var(--secondary);
+            }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+            button:hover {
+                background: #1d4ed8;
+            }
+
+        #errorMsg {
+            color: var(--primary);
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+            background: #fee2e2;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <img src="img/ASIMEX LOGO2.jpeg" width="180" alt="ASIMEX LOGO">
+        <h2>DUCA Check PRO</h2>
+        <p>Departamento de Talento y Cultura</p>
+
+        <div class="input-group">
+            <label>Usuario</label>
+            <input type="text" id="username" placeholder="Ingresa tu usuario">
+        </div>
+
+        <div class="input-group">
+            <label>Contraseña</label>
+            <input type="password" id="password" placeholder="••••••••">
+        </div>
+
+        <button onclick="intentarLogin()">Entrar al Sistema</button>
+        <div id="errorMsg"></div>
+    </div>
+
+    <script>
+        async function intentarLogin() {
+            const user = document.getElementById("username").value;
+            const pass = document.getElementById("password").value;
+            const errorDiv = document.getElementById("errorMsg");
+
+            errorDiv.style.display = "none";
+
+            if (!user || !pass) {
+                errorDiv.innerText = "Por favor, completa todos los campos.";
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ NombreUsuario: user, Password: pass })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Guardamos la sesión en el navegador
+                    localStorage.setItem("userRole", data.rol);
+                    localStorage.setItem("userName", user);
+
+                    // Redirección lógica
+                    if (data.rol === "Admin") {
+                        window.location.href = "indexadmin.html";
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                } else {
+                    errorDiv.innerText = data.mensaje || "Credenciales incorrectas.";
+                    errorDiv.style.display = "block";
+                }
+            } catch (err) {
+                errorDiv.innerText = "Error de conexión con el servidor.";
+                errorDiv.style.display = "block";
+            }
+        }
+
+        // Permitir entrar con la tecla Enter
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') intentarLogin();
+        });
+    </script>
+</body>
+</html>
